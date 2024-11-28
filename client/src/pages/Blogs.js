@@ -18,7 +18,12 @@ const Blogs = () => {
     getAllBlogs();
   }, []);
   return (
-    <div>
+    <div  style={{
+      display: "grid",
+      gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))",
+      gap: "16px",
+      padding: "16px",
+    }}>
       {blogs &&
         blogs.map((blog) => (
           <BlogCard

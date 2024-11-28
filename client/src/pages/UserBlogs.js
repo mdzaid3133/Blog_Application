@@ -8,21 +8,36 @@ const UserBlogs = () => {
   const getUserBlogs = async () => {
     try {
       const id = localStorage.getItem("userId");
-      const { data } = await axios.get(`/api/v1/blog/user-blog/${id}`);
+      if (!id) {
+        console.error("User ID not found in localStorage.");
+        return;
+      }
+  
+      const response = await axios.get(`/api/v1/blog/user-blog/${id}`);
+      const { data } = response;
+       console.log(data)
       if (data?.success) {
-        setBlogs(data?.userBlog.blogs);
+        setBlogs(data?.data?.blogs || []);
+      } else {
+        console.error("Failed to fetch user blogs:", data?.message);
       }
     } catch (error) {
-      console.log(error);
+      console.error("Error fetching user blogs:", error.message || error);
     }
   };
+  
 
   useEffect(() => {
     getUserBlogs();
   }, []);
-  console.log(blogs);
+
   return (
-    <div>
+    <div style={{
+      display: "grid",
+      gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))",
+      gap: "16px",
+      padding: "16px",
+    }}>
       {blogs && blogs.length > 0 ? (
         blogs.map((blog) => (
           <BlogCard
